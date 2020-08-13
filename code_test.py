@@ -10,11 +10,15 @@ start_time = time.time()
 ### dataDir1='/peate_archive/.data5/Ops/npp/noaa/op/2012/05/15/scris/'
 ### dataDir2='/peate_archive/.data5/Ops/npp/noaa/op/2012/05/15/gcrso/'
 ### dataDir2='/peate_archive/.data6/Ops/snpp/gdisc/2/2015/06/01/crisl1b/'
-dataDir2='/tmp/data/Ops/snpp/gdisc/2/2015/06/01/crisl1b/'
 ### dataDir3='/peate_archive/.data5/Ops/npp/noaa/op/2012/05/15/svm15/'
 ### dataDir4='/peate_archive/.data5/Ops/npp/noaa/op/2012/05/15/gmodo/'
 ### dataDir4='/raid15/qyue/VIIRS/VIIRS/20150601/'
-dataDir4='/tmp/data/VIIRS/20150601/'
+
+
+### dataDir2='/tmp/data/Ops/snpp/gdisc/2/2015/06/01/crisl1b/'
+dataDir2='./'
+### dataDir4='/tmp/data/VIIRS/20150601/'
+dataDir4='./'
 
 # get CrIS files 
 ### cris_sdr_files = sorted(glob.glob(dataDir1+'SCRIS*d2012*'))[21:40]
