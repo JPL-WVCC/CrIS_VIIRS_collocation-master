@@ -84,7 +84,7 @@ print("collocation are done in --- %s seconds --- " % (time.time() - start_time)
 
 # collocation is done
 
-sys.exit(0)
+### sys.exit(0)
 
 
 ##############################################################################
@@ -118,6 +118,7 @@ cNorm  = colors.Normalize(vmin=220, vmax=310)
 scalarMap = cmx.ScalarMappable(norm=cNorm, cmap=jet)
 
 # show collocated pixels 
+"""
 for k, j, i in np.ndindex(cris_lat.shape):
 	
 	ix=dx[k,j,i]
@@ -125,11 +126,15 @@ for k, j, i in np.ndindex(cris_lat.shape):
 	vcolorVal = np.squeeze(scalarMap.to_rgba(viirs_bt[iy, ix]))
 	vx, vy = m(viirs_lon[iy, ix], viirs_lat[iy, ix])
 	cs1 = m.scatter(vx, vy, s=0.5, c=vcolorVal, edgecolor='none', cmap='jet', marker='.')
+"""
 
-plt.savefig('myfig_20190219', dpi=300)    
+### plt.savefig('myfig_20190219', dpi=300)    
+lon1 = str(int(cris_lon.min()))
+lat1 = str(int(cris_lat.min()))
+lon2 = str(int(cris_lon.max()))
+lat2 = str(int(cris_lat.max()))
+
+plt.savefig('cris_viirs_'+lon1+'_'+lat1+'_'+lon2+'_'+lat2, dpi=300)    
 
 print("making plots is using --- %s seconds " % (time.time() - start_time))
 
-
-
- 
