@@ -1,4 +1,5 @@
 import numpy as np
+import pickle as pkl
 import glob
 import geo
 import time
@@ -79,6 +80,14 @@ cris_los = -1.0*cris_los
 # Set fake viirs_sdrQa to be zero: good quality everywhere since not for calibration
 viirs_sdrQa=np.zeros(viirs_lon.shape)
 dy, dx = geo.match_cris_viirs(cris_los, cris_pos, viirs_pos, viirs_sdrQa)
+# dump dy dx to file
+foy = open('dy.pkl', 'wb')
+pkl.dump(dy, foy)
+foy.close()
+fox = open('dx.pkl', 'wb')
+pkl.dump(dx, fox)
+fox.close()
+
 ### print("collocation are done in --- %s seconds --- for %d files " % (time.time() - start_time, len(cris_sdr_files)))
 print("collocation are done in --- %s seconds --- " % (time.time() - start_time))
 
