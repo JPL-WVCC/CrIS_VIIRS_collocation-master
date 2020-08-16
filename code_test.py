@@ -93,7 +93,7 @@ print("collocation are done in --- %s seconds --- " % (time.time() - start_time)
 
 # collocation is done
 
-### sys.exit(0)
+sys.exit(0)
 
 
 ##############################################################################
