@@ -163,11 +163,11 @@ d1 = \
     "label": "matchup_cris_viirs_"+ start_date + '_' + end_date
 }
 with open(output_filename+'.dataset.json', 'w') as datasetf:
-    json.dump(d1, datasetf)
+    json.dump(d1, datasetf, indent=2)
 
 d2 = {}
 with open(output_filename+'.met.json', 'w') as metf:
-    json.dump(d2, metf)
+    json.dump(d2, metf, indent=2)
 
 
 print("done in --- %.2f seconds --- " % (float(time.time() - start_t)))
