@@ -5,6 +5,7 @@ import time
 import pdb
 import os, sys
 import pickle
+import shutil
 import netCDF4 as nc4
 from datetime import datetime
 
@@ -74,16 +75,23 @@ if True:
         print ('start_time: ', start_time)
         print ('end_time: ', end_time)
 
-        start_date = time.strftime('%Y%m%dT%H%M%S', time.localtime(start_time))
-        end_date = time.strftime('%Y%m%dT%H%M%S', time.localtime(end_time))
+        start_date = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.localtime(start_time))
+        end_date = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.localtime(end_time))
 
         print ('start_date: ', start_date)
         print ('end_date: ', end_date)
 
-        output_filename = 'IND_CrIS_VIIRSMOD_' + start_date + '_' + end_date
+        start_date2 = time.strftime('%Y%m%dT%H%M%S', time.localtime(start_time))
+        end_date2 = time.strftime('%Y%m%dT%H%M%S', time.localtime(end_time))
+        output_filename = 'IND_CrIS_VIIRSMOD_' + start_date2 + '_' + end_date2
         print ('output_filename: ', output_filename)
 
+        if os.path.exists(output_filename):
+          shutil.rmtree(output_filename)
+
         ### sys.exit(0)
+        os.mkdir(output_filename)
+
 
 #cris_realLW = geo.read_nasa_cris_sdr(cris_sdr_files , sdrFlag=True)
 
@@ -123,7 +131,7 @@ if True:
         ### f = nc4.Dataset('/raid15/qyue/VIIRS/VIIRS/201501/Index/IND_CrIS_VIIRSMOD_201501'+str(iday)+'_'+str(iloop)+'.nc','w', format='NETCDF4') #'w' stands for write
         ### f = nc4.Dataset('/raid15/leipan/VIIRS/VIIRS/201501/Index/IND_CrIS_VIIRSMOD_201501'+str(iday)+'_'+str(iloop)+'.nc','w', format='NETCDF4') #'w' stands for write
         ### f = nc4.Dataset('./IND_CrIS_VIIRSMOD_201501'+'.nc','w', format='NETCDF4') #'w' stands for write
-        f = nc4.Dataset(output_filename+'.nc','w', format='NETCDF4') #'w' stands for write
+        f = nc4.Dataset(output_filename+'/'+output_filename+'.nc','w', format='NETCDF4') #'w' stands for write
 
         f.createDimension('m',dy_flatten.size)
         f.createDimension('x', dy.shape[0])
@@ -151,22 +159,22 @@ print("now: ", now)
 
 # dd/mm/YY H:M:S
 ### dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-dt_string = now.strftime("%Y%m%dT%H%M%S")
+dt_string = now.strftime("%Y-%m-%dT%H:%M:%SZ")
 print("date and time =", dt_string)	
 
 d1 = \
 {
     "creation_timestamp": dt_string,
     "version": "v1.0",
-    "endtime": start_date+"Z",
-    "starttime": end_date+"Z",
-    "label": "matchup_cris_viirs_"+ start_date + '_' + end_date
+    "starttime": start_date,
+    "endtime": end_date,
+    "label": "matchup_cris_viirs_"+ start_date2 + '_' + end_date2
 }
-with open(output_filename+'.dataset.json', 'w') as datasetf:
+with open(output_filename+'/'+output_filename+'.dataset.json', 'w') as datasetf:
     json.dump(d1, datasetf, indent=2)
 
 d2 = {}
-with open(output_filename+'.met.json', 'w') as metf:
+with open(output_filename+'/'+output_filename+'.met.json', 'w') as metf:
     json.dump(d2, metf, indent=2)
 
 
