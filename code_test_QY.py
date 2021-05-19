@@ -12,6 +12,7 @@ from datetime import datetime
 import json
 
 start_t = time.time()
+print ('current dir: ', os.getcwd())
 """
 dataDir1='/peate_archive/.data5/Ops/npp/noaa/op/2012/05/15/scris/'
 dataDir2='/peate_archive/.data5/Ops/npp/noaa/op/2012/05/15/gcrso/'
@@ -46,8 +47,8 @@ if True:
 
 # read VIIRS data 
         viirs_lon, viirs_lat, viirs_satAzimuth, viirs_satRange, viirs_satZenith, viirs_height, viirs_time = geo_QY.read_nasa_viirs_geo(viirs_geo_files)
-        """
         print ('viirs_time: ', viirs_time)
+        """
         print ('type(viirs_time): ', type(viirs_time))
         print ('viirs_time.min(): ', viirs_time.min())
         print ('viirs_time.max(): ', viirs_time.max())
@@ -61,8 +62,8 @@ if True:
 
 # read CrIS data 
         cris_lon, cris_lat, cris_satAzimuth, cris_satRange, cris_satZenith, cris_time, cris_realLW = geo_QY.read_nasa_cris_geo(cris_geo_files)
-        """
         print ('cris_time: ', cris_time)
+        """
         print ('cris_time.min(): ', cris_time.min())
         print ('cris_time.max(): ', cris_time.max())
         """
