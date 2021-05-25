@@ -1,6 +1,7 @@
 pro plot_CrIS_VIIRS_Cloud,year,month,day,hour,gran1,gran2
 
-datadir='/home/qyue/VIIRS/CrIS_VIIRS_collocation-master/post_process/VIIRS_Cloud_onCrIS/'
+;;; datadir='/home/qyue/VIIRS/CrIS_VIIRS_collocation-master/post_process/VIIRS_Cloud_onCrIS/'
+datadir='/home/leipan/tmp/VIIRS_Cloud_onCrIS/'
 
 mode=string(year,format='(i4.4)')+string(month,format='(i2.2)')+string(day,format='(i2.2)')+'_F'+string(hour,format='(i3.3)')
 
