@@ -1,0 +1,17 @@
+;.rnew /home/eff/sndrlib/idl/idl_initialize.pro
+;!path=EXPAND_PATH('/home/eff/AIRS/IDL:/home/eff/sndrlib/idl:/home/eff/uars.idl')+':'+!PATH
+
+!PATH=EXPAND_Path('/home/qyue/IDL/lib/textoidl/')+':'+!PATH
+!PATH=EXPAND_Path('/home/qyue/coyote/coyote/')+':'+!PATH
+!Path=EXPAND_Path('/home/qyue/IDLsource/astron_lib/pro')+':'+!PATH
+.rnew /home/qyue/IDLsource/astron_lib/astrolib.pro
+restore,'/home/qyue/IDL/ecmwf_interp_llt.sav'
+.rnew /home/qyue/IDL/lib/is_ncdf.pro
+.rnew /home/qyue/IDL/lib/read_ncdf.pro
+.rnew /home/qyue/IDL/lib/read_nc4.pro
+.rnew /home/qyue/airs_testing/read_airs_swath.pro
+.rnew /home/qyue/IDLsource/other/concat.pro
+.rnew /home/qyue/IDL/lib/cd_to_mmr
+.rnew /home/qyue/IDL/lib/pressures
+.rnew /home/qyue/AIRS-MODIS-MERRA/prof_interpol
+
