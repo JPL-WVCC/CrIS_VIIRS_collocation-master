@@ -50,9 +50,9 @@ if True:
         print ('viirs_time: ', viirs_time)
         """
         print ('type(viirs_time): ', type(viirs_time))
+        """
         print ('viirs_time.min(): ', viirs_time.min())
         print ('viirs_time.max(): ', viirs_time.max())
-        """
         start_time = viirs_time.min()
         end_time = viirs_time.max()
 
@@ -63,10 +63,9 @@ if True:
 # read CrIS data 
         cris_lon, cris_lat, cris_satAzimuth, cris_satRange, cris_satZenith, cris_time, cris_realLW = geo_QY.read_nasa_cris_geo(cris_geo_files)
         print ('cris_time: ', cris_time)
-        """
         print ('cris_time.min(): ', cris_time.min())
         print ('cris_time.max(): ', cris_time.max())
-        """
+
         if start_time < cris_time.min():
           start_time = cris_time.min()
 
@@ -76,6 +75,16 @@ if True:
         print ('start_time: ', start_time)
         print ('end_time: ', end_time)
 
+        # CrIS and VIIRS use epoch time since 1/1/1993 (1993TAI),
+        # and unix epoch time is since 1/1/1970
+        # there is a 23 year difference
+        diff = (datetime(1993,1,1,0,0) - datetime(1970,1,1)).total_seconds()
+        print('diff: ', diff)
+        start_time += diff
+        end_time += diff
+
+        os.environ['TZ'] = 'GMT'
+        time.tzset()
         start_date = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.localtime(start_time))
         end_date = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.localtime(end_time))
 
