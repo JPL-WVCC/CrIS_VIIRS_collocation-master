@@ -93,7 +93,19 @@ if True:
 
         start_date2 = time.strftime('%Y%m%dT%H%M%S', time.localtime(start_time))
         end_date2 = time.strftime('%Y%m%dT%H%M%S', time.localtime(end_time))
-        output_filename = 'IND_CrIS_VIIRSMOD_' + start_date2 + '_' + end_date2
+
+        # changed per Qing's suggestion
+        ### output_filename = 'IND_CrIS_VIIRSMOD_' + start_date2 + '_' + end_date2
+
+        # Qing's suggestion:
+        # use this name: IND_CrIS_VIIRSMOD_SNDR.SNPP.20150601T1548.g159.nc
+        # for this CRIS granule: SNDR.SNPP.CRIS.20150601T1548.m06.g159.L1B_NSR.std.v02_05.G.180904193415.nc
+        cris_geo_file = os.path.basename(cris_geo_files[0])
+        print ('cris_geo_file: ', cris_geo_file)
+        split1 = cris_geo_file.split('.')
+        print ('split1: ', split1)
+        # split1:  ['SNDR', 'SNPP', 'CRIS', '20150603T1836', 'm06', 'g187', 'L1B_NSR', 'std', 'v02_05', 'G', '180905023033', 'nc']
+        output_filename = 'IND_CrIS_VIIRSMOD_' + split1[0] + '.' + split1[1] + '.' + split1[3] + '.' + split1[5]
         print ('output_filename: ', output_filename)
 
         if os.path.exists(output_filename):
@@ -101,7 +113,6 @@ if True:
 
         ### sys.exit(0)
         os.mkdir(output_filename)
-
 
 #cris_realLW = geo.read_nasa_cris_sdr(cris_sdr_files , sdrFlag=True)
 
