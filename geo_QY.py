@@ -102,13 +102,21 @@ def match_cris_viirs_QY(crisLos, crisPos, viirsPos, cristime,viirstime):
       Remote Sensing, 8, 76; doi:10.3390/rs8010076.     
     """
     
+    print('crisLos.shape: ', crisLos.shape)
+    print('crisPos.shape: ', crisPos.shape)
+    print('viirsPos.shape: ', viirsPos.shape)
+    print('cristime.shape: ', cristime.shape)
+    print('viirstime.shape: ', viirstime.shape)
+
     # Derive Satellite Postion 
     crisSat = crisPos - crisLos 
         
-        # using KD-tree to find best matched points 
+    # using KD-tree to find best matched points 
     
     # build kdtree to find match index 
     pytree_los = KDTree(viirsPos.reshape(viirsPos.size//3, 3))
+    print('type(pytree_los): ', type(pytree_los))
+
     dist_los, idx_los = pytree_los.query(crisPos.reshape(crisPos.size//3, 3) , sqr_dists=False)
     
     my, mx = np.unravel_index(idx_los, viirsPos.shape[0:2])
@@ -117,8 +125,10 @@ def match_cris_viirs_QY(crisLos, crisPos, viirsPos, cristime,viirstime):
     idy, idx  = find_match_index_QY(crisLos.reshape(crisLos.size//3, 3),\
                                      crisSat.reshape(crisSat.size//3, 3),\
                                      viirsPos, cristimebig.reshape(1,crisLos.size//3),viirstime, mx, my)
+    print('len(idy) before: ', len(idy))
         
     idy = np.array(idy).reshape(crisLos.shape[0:crisLos.ndim-1])
+    print('idy.shape after: ', idy.shape)
     idx = np.array(idx).reshape(crisLos.shape[0:crisLos.ndim-1])
     
     return idy, idx
@@ -340,6 +350,8 @@ def read_nasa_viirs_geo (filelist, ephemeris=False, hgt=True):
     if not ephemeris:
         Latitude  = np.concatenate([f.groups['geolocation_data'].variables['latitude'][:]  for f in geos])
         Longitude = np.concatenate([f.groups['geolocation_data'].variables['longitude'][:] for f in geos])
+        gid = np.concatenate()
+
         SatelliteAzimuthAngle = np.concatenate([f.groups['geolocation_data'].variables['sensor_azimuth'][:] for f in geos])
         SatelliteRange = np.concatenate([f.groups['geolocation_data'].variables['range'][:] for f in geos])
         SatelliteZenithAngle = np.concatenate([f.groups['geolocation_data'].variables['sensor_zenith'][:] for f in geos])
@@ -409,6 +421,14 @@ def find_match_index (cris_los, cris_sat, viirs_pos_in, viirs_sdrQa_in, \
     
 ##########################
     
+# output:
+# index_x: scan line number
+# index_y: foot print number
+#
+# input:
+# mx:
+# my:
+#
 def find_match_index_QY (cris_los, cris_sat, viirs_pos_in, cris_time,viirs_time, \
                       mx, my, fovDia=0.963):
 
