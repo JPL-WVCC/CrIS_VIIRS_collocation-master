@@ -47,12 +47,17 @@ if True:
 
 # read VIIRS data 
         viirs_lon, viirs_lat, viirs_satAzimuth, viirs_satRange, viirs_satZenith, viirs_height, viirs_time = geo_QY.read_nasa_viirs_geo(viirs_geo_files)
-        print ('viirs_time: ', viirs_time)
-        """
-        print ('type(viirs_time): ', type(viirs_time))
-        """
-        print ('viirs_time.min(): ', viirs_time.min())
-        print ('viirs_time.max(): ', viirs_time.max())
+        ### print ('viirs_time: ', viirs_time)
+        ### print ('type(viirs_time): ', type(viirs_time))
+        ### print ('viirs_time: ', viirs_time)
+        print ('viirs_time.shape: ', viirs_time.shape)
+        ### print ('viirs_time.min(): ', viirs_time.min())
+        ### print ('viirs_time.max(): ', viirs_time.max())
+
+        ### print ('viirs_lon: ', viirs_lon)
+        ### print ('type(viirs_lon): ', type(viirs_lon))
+        print ('viirs_lon.shape: ', viirs_lon.shape)
+
         start_time = viirs_time.min()
         end_time = viirs_time.max()
 
@@ -62,7 +67,7 @@ if True:
 
 # read CrIS data 
         cris_lon, cris_lat, cris_satAzimuth, cris_satRange, cris_satZenith, cris_time, cris_realLW = geo_QY.read_nasa_cris_geo(cris_geo_files)
-        print ('cris_time: ', cris_time)
+        ### print ('cris_time: ', cris_time)
         print ('cris_time.min(): ', cris_time.min())
         print ('cris_time.max(): ', cris_time.max())
 
@@ -128,10 +133,14 @@ if True:
         cris_los[:, :, :, 0], cris_los[:, :, :, 1], cris_los[:, :, :, 2] = \
 	    geo_QY.ENU2ECEF(cris_east, cris_north, cris_up, cris_lon, cris_lat)
 
+        print ('cris_los.shape: ', cris_los.shape)
+
 # compute viirs POS vector in ECEF
         viirs_pos= np.zeros(np.append(viirs_lat.shape, 3))
         viirs_pos[:, :, 0], viirs_pos[:, :, 1], viirs_pos[:, :, 2] = \
 	    geo_QY.LLA2ECEF(viirs_lon, viirs_lat, np.zeros_like(viirs_lat))
+
+        print ('viirs_pos.shape: ', viirs_pos.shape)
 
 # cris_los is pointing from pixel to satellite, we need to
 #   change from satellite to pixel
@@ -143,6 +152,12 @@ if True:
 
 #remove the sdrqa, but adding time requirement (less than 600S difference)
         dy, dx = geo_QY.match_cris_viirs_QY(cris_los, cris_pos, viirs_pos, cris_time, viirs_time)
+
+        ### print ('dy: ', dy)
+        print ('dy.shape: ', dy.shape)
+        ### print ('dx: ', dx)
+        print ('dx.shape: ', dx.shape)
+
 #	print("collocation are done in --- %s seconds --- for %d files " % (time.time() - start_time, len(cris_geo_files)))
 
         dy_flatten = np.array([item for lst in dy.reshape(-1) for item in lst])
@@ -152,6 +167,10 @@ if True:
         ### f = nc4.Dataset('/raid15/qyue/VIIRS/VIIRS/201501/Index/IND_CrIS_VIIRSMOD_201501'+str(iday)+'_'+str(iloop)+'.nc','w', format='NETCDF4') #'w' stands for write
         ### f = nc4.Dataset('/raid15/leipan/VIIRS/VIIRS/201501/Index/IND_CrIS_VIIRSMOD_201501'+str(iday)+'_'+str(iloop)+'.nc','w', format='NETCDF4') #'w' stands for write
         ### f = nc4.Dataset('./IND_CrIS_VIIRSMOD_201501'+'.nc','w', format='NETCDF4') #'w' stands for write
+
+        # make it a real standard netcdf product
+        # e.g., include long name of all the variables
+
         f = nc4.Dataset(output_filename+'/'+output_filename+'.nc','w', format='NETCDF4') #'w' stands for write
 
         f.createDimension('m',dy_flatten.size)
@@ -164,6 +183,8 @@ if True:
         x_flatten = f.createVariable('dx', 'i4', ('m',))
 
         ### attr1 = f.createAttribute('granules', 'the info of the 3 viirs granules involved')
+
+        print ('dx_flatten.shape: ', dx_flatten.shape)
 
         y_size[:]=dy_size
         y_flatten[:]=dy_flatten
