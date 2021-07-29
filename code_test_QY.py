@@ -99,6 +99,9 @@ if True:
         start_date2 = time.strftime('%Y%m%dT%H%M%S', time.localtime(start_time))
         end_date2 = time.strftime('%Y%m%dT%H%M%S', time.localtime(end_time))
 
+        print ('start_date2: ', start_date2)
+        print ('end_date2: ', end_date2)
+
         # changed per Qing's suggestion
         ### output_filename = 'IND_CrIS_VIIRSMOD_' + start_date2 + '_' + end_date2
 
@@ -182,13 +185,25 @@ if True:
         y_size=f.createVariable('dy_size','i4',('x', 'y', 'z',))
         x_flatten = f.createVariable('dx', 'i4', ('m',))
 
-        ### attr1 = f.createAttribute('granules', 'the info of the 3 viirs granules involved')
-
         print ('dx_flatten.shape: ', dx_flatten.shape)
 
         y_size[:]=dy_size
         y_flatten[:]=dy_flatten
         x_flatten[:]=dx_flatten
+
+        # add global attributes
+
+        viirs_str = ''
+        for item1 in viirs_geo_files:
+          viirs_str += ',' + os.path.basename(item1)
+
+        viirs_str = viirs_str[1:]
+        f.viirs_file_names = viirs_str
+
+        f.cris_file_name = os.path.basename(cris_geo_file)
+
+        f.cris_start_time = start_date
+        f.cris_end_time = end_date
 
         f.description="Demo Data for 2015 Jan"
 
