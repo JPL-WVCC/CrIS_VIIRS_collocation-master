@@ -350,7 +350,7 @@ def read_nasa_viirs_geo (filelist, ephemeris=False, hgt=True):
     if not ephemeris:
         Latitude  = np.concatenate([f.groups['geolocation_data'].variables['latitude'][:]  for f in geos])
         Longitude = np.concatenate([f.groups['geolocation_data'].variables['longitude'][:] for f in geos])
-        gid = np.concatenate()
+        ### gid = np.concatenate()
 
         SatelliteAzimuthAngle = np.concatenate([f.groups['geolocation_data'].variables['sensor_azimuth'][:] for f in geos])
         SatelliteRange = np.concatenate([f.groups['geolocation_data'].variables['range'][:] for f in geos])
