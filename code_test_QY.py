@@ -182,8 +182,11 @@ if True:
         f.createDimension('z', dy.shape[2])
 
         y_flatten = f.createVariable('dy', 'i4', ('m',))
+        y_flatten.setncatts({'long_name':u'y coords', 'units':u'meter', 'var_desc':u'Y coordnates'})
         y_size=f.createVariable('dy_size','i4',('x', 'y', 'z',))
+        y_size.setncatts({'long_name':u'y size', 'units':u'none', 'var_desc':u'Y dimension size'})
         x_flatten = f.createVariable('dx', 'i4', ('m',))
+        x_flatten.setncatts({'long_name':u'x coords', 'units':u'meter', 'var_desc':u'X coordnates'})
 
         print ('dx_flatten.shape: ', dx_flatten.shape)
 
@@ -205,7 +208,13 @@ if True:
         f.cris_start_time = start_date
         f.cris_end_time = end_date
 
-        f.description="Demo Data for 2015 Jan"
+        f.cris_min_lat = cris_lat.min()
+        f.cris_min_lon = cris_lon.min()
+        f.cris_max_lat = cris_lat.max()
+        f.cris_max_lon = cris_lon.max()
+
+
+        f.description="Co-location Data for 2015 Jan"
 
         f.close()
 
