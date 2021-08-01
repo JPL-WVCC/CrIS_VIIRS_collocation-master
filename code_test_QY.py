@@ -203,7 +203,13 @@ if True:
         viirs_str = viirs_str[1:]
         f.viirs_file_names = viirs_str
 
-        f.cris_file_name = os.path.basename(cris_geo_file)
+        ### f.cris_file_name = os.path.basename(cris_geo_file)
+        cris_str = ''
+        for item1 in cris_geo_files:
+          cris_str += ',' + os.path.basename(item1)
+
+        cris_str = cris_str[1:]
+        f.cris_file_names = cris_str
 
         f.cris_start_time = start_date
         f.cris_end_time = end_date
