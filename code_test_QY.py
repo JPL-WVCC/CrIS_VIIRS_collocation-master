@@ -176,17 +176,17 @@ if True:
 
         f = nc4.Dataset(output_filename+'/'+output_filename+'.nc','w', format='NETCDF4') #'w' stands for write
 
-        f.createDimension('m',dy_flatten.size)
-        f.createDimension('x', dy.shape[0])
-        f.createDimension('y', dy.shape[1])
-        f.createDimension('z', dy.shape[2])
+        f.createDimension('GranuleCount_ImagerPixel',dy_flatten.size)
+        f.createDimension('sounder_atrack', dy.shape[0])
+        f.createDimension('sounder_xtrack', dy.shape[1])
+        f.createDimension('sounder_fov', dy.shape[2])
 
-        y_flatten = f.createVariable('dy', 'i4', ('m',))
-        y_flatten.setncatts({'long_name':u'y coords', 'units':u'none', 'var_desc':u'Y coordinates'})
-        y_size=f.createVariable('dy_size','i4',('x', 'y', 'z',))
-        y_size.setncatts({'long_name':u'y size', 'units':u'none', 'var_desc':u'Y dimension size'})
-        x_flatten = f.createVariable('dx', 'i4', ('m',))
-        x_flatten.setncatts({'long_name':u'x coords', 'units':u'none', 'var_desc':u'X coordinates'})
+        y_flatten = f.createVariable('number_of_pixels', 'i4', ('GranuleCount_ImagerPixel',))
+        y_flatten.setncatts({'long_name':u'imager cross-track index', 'units':u'none', 'var_desc':u'Y coordinates'})
+        y_size=f.createVariable('FOVCount_ImagerPixel','i4',('sounder_atrack', 'sounder_xtrack', 'sounder_fov',))
+        y_size.setncatts({'long_name':u'count of imager pixels per sounder FOV', 'units':u'none', 'var_desc':u'Y dimension size'})
+        x_flatten = f.createVariable('number_of_lines', 'i4', ('GranuleCount_ImagerPixel',))
+        x_flatten.setncatts({'long_name':u'imager along-track index after concatenating imager granules along track', 'units':u'none', 'var_desc':u'X coordinates'})
 
         print ('dx_flatten.shape: ', dx_flatten.shape)
 
@@ -220,7 +220,7 @@ if True:
         f.cris_max_lon = cris_lon.max()
 
 
-        f.description="Co-location Data for 2015 Jan"
+        f.description="Version-1 SNPP VIIRS-CrIS collocation index product by NASA MEaSUREs"
 
         f.close()
 
