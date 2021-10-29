@@ -182,11 +182,11 @@ if True:
         f.createDimension('z', dy.shape[2])
 
         y_flatten = f.createVariable('dy', 'i4', ('m',))
-        y_flatten.setncatts({'long_name':u'y coords', 'units':u'meter', 'var_desc':u'Y coordnates'})
+        y_flatten.setncatts({'long_name':u'y coords', 'units':u'none', 'var_desc':u'Y coordinates'})
         y_size=f.createVariable('dy_size','i4',('x', 'y', 'z',))
         y_size.setncatts({'long_name':u'y size', 'units':u'none', 'var_desc':u'Y dimension size'})
         x_flatten = f.createVariable('dx', 'i4', ('m',))
-        x_flatten.setncatts({'long_name':u'x coords', 'units':u'meter', 'var_desc':u'X coordnates'})
+        x_flatten.setncatts({'long_name':u'x coords', 'units':u'none', 'var_desc':u'X coordinates'})
 
         print ('dx_flatten.shape: ', dx_flatten.shape)
 
@@ -209,7 +209,7 @@ if True:
           cris_str += ',' + os.path.basename(item1)
 
         cris_str = cris_str[1:]
-        f.cris_file_names = cris_str
+        f.cris_file_name = cris_str
 
         f.cris_start_time = start_date
         f.cris_end_time = end_date
