@@ -182,11 +182,11 @@ if True:
         f.createDimension('sounder_fov', dy.shape[2])
 
         y_flatten = f.createVariable('number_of_pixels', 'i4', ('GranuleCount_ImagerPixel',))
-        y_flatten.setncatts({'long_name':u'imager cross-track index', 'units':u'none', 'var_desc':u'Y coordinates'})
+        y_flatten.setncatts({'long_name':u'imager cross-track index', 'units':u'none', 'var_desc':u'imager cross-track index'})
         y_size=f.createVariable('FOVCount_ImagerPixel','i4',('sounder_atrack', 'sounder_xtrack', 'sounder_fov',))
-        y_size.setncatts({'long_name':u'count of imager pixels per sounder FOV', 'units':u'none', 'var_desc':u'Y dimension size'})
+        y_size.setncatts({'long_name':u'count of imager pixels per sounder FOV', 'units':u'none', 'var_desc':u'count of imager pixels per sounder FOV'})
         x_flatten = f.createVariable('number_of_lines', 'i4', ('GranuleCount_ImagerPixel',))
-        x_flatten.setncatts({'long_name':u'imager along-track index after concatenating imager granules along track', 'units':u'none', 'var_desc':u'X coordinates'})
+        x_flatten.setncatts({'long_name':u'imager along-track index after concatenating imager granules along track', 'units':u'none', 'var_desc':u'imager along-track index after concatenating imager granules along track'})
 
         print ('dx_flatten.shape: ', dx_flatten.shape)
 
