@@ -220,7 +220,7 @@ if True:
         f.cris_max_lon = cris_lon.max()
 
 
-        f.description="Version-1 SNPP VIIRS-CrIS collocation index product by NASA MEaSUREs"
+        f.description="Version-1 SNPP VIIRS-CrIS collocation index product by the project of Multidecadal Satellite Record of Water Vapor, Temperature, and Clouds (PI: Eric Fetzer) funded by NASA’s Making Earth System Data Records for Use in Research Environments (MEaSUREs) Program."
 
         f.close()
 
