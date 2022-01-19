@@ -16,6 +16,8 @@ import json
 
 def call_match_cris_viirs(cris_geo_files, viirs_geo_files, product_root_dir):
 
+        start_t = time.time()
+
 # read VIIRS data 
         viirs_lon, viirs_lat, viirs_satAzimuth, viirs_satRange, viirs_satZenith, viirs_height, viirs_time = geo_QY.read_nasa_viirs_geo(viirs_geo_files)
         ### print ('viirs_time: ', viirs_time)
@@ -145,7 +147,7 @@ def call_match_cris_viirs(cris_geo_files, viirs_geo_files, product_root_dir):
         # make it a real standard netcdf product
         # e.g., include long name of all the variables
 
-        f = nc4.Dataset(output_filename+'/'+output_filename+'.nc','w', format='NETCDF4') #'w' stands for write
+        f = nc4.Dataset(output_filename+'/'+os.path.basename(output_filename)+'.nc','w', format='NETCDF4') #'w' stands for write
 
         f.createDimension('GranuleCount_ImagerPixel',dy_flatten.size)
         f.createDimension('sounder_atrack', dy.shape[0])
@@ -190,10 +192,37 @@ def call_match_cris_viirs(cris_geo_files, viirs_geo_files, product_root_dir):
         f.cris_max_lat = cris_lat.max()
         f.cris_max_lon = cris_lon.max()
 
-
         f.description="Version-1 SNPP VIIRS-CrIS collocation index product by the project of Multidecadal Satellite Record of Water Vapor, Temperature, and Clouds (PI: Eric Fetzer) funded by NASA’s Making Earth System Data Records for Use in Research Environments (MEaSUREs) Program."
 
         f.close()
+
+        # datetime object containing current date and time
+        now = datetime.now()
+        print("now: ", now)
+
+        # dd/mm/YY H:M:S
+        ### dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+        dt_string = now.strftime("%Y-%m-%dT%H:%M:%SZ")
+        print("date and time =", dt_string)	
+
+        d1 = \
+        {
+          "creation_timestamp": dt_string,
+          "version": "v1.0",
+          "starttime": start_date,
+          "endtime": end_date,
+          "label": "matchup_cris_viirs_"+ start_date2 + '_' + end_date2
+        }
+        with open(output_filename+'/'+os.path.basename(output_filename)+'.dataset.json', 'w') as datasetf:
+          json.dump(d1, datasetf, indent=2)
+
+        d2 = {}
+        with open(output_filename+'/'+os.path.basename(output_filename)+'.met.json', 'w') as metf:
+          json.dump(d2, metf, indent=2)
+
+
+        print("done in --- %.2f seconds --- " % (float(time.time() - start_t)))
+        # collocation is done
 
         return start_date, start_date2, end_date, end_date2, output_filename
 
@@ -239,6 +268,13 @@ if __name__ == "__main__":
 
         start_date, start_date2, end_date, end_date2, output_filename = call_match_cris_viirs(cris_geo_files, viirs_geo_files, './')
 
+
+
+
+
+
+
+"""
   # datetime object containing current date and time
   now = datetime.now()
   print("now: ", now)
@@ -256,24 +292,18 @@ if __name__ == "__main__":
     "endtime": end_date,
     "label": "matchup_cris_viirs_"+ start_date2 + '_' + end_date2
   }
-  with open(output_filename+'/'+output_filename+'.dataset.json', 'w') as datasetf:
+  with open(output_filename+'/'+os.path.basename(output_filename)+'.dataset.json', 'w') as datasetf:
     json.dump(d1, datasetf, indent=2)
 
   d2 = {}
-  with open(output_filename+'/'+output_filename+'.met.json', 'w') as metf:
+  with open(output_filename+'/'+os.path.basename(output_filename)+'.met.json', 'w') as metf:
     json.dump(d2, metf, indent=2)
 
 
   print("done in --- %.2f seconds --- " % (float(time.time() - start_t)))
 
   # collocation is done
-
-
-
-
-
-
-
+"""
 
 
 
