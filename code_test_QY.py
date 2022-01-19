@@ -14,7 +14,7 @@ import json
 
 
 
-def call_match_cris_viirs(cris_geo_files, viirs_geo_files):
+def call_match_cris_viirs(cris_geo_files, viirs_geo_files, product_root_dir):
 
 # read VIIRS data 
         viirs_lon, viirs_lat, viirs_satAzimuth, viirs_satRange, viirs_satZenith, viirs_height, viirs_time = geo_QY.read_nasa_viirs_geo(viirs_geo_files)
@@ -84,7 +84,7 @@ def call_match_cris_viirs(cris_geo_files, viirs_geo_files):
         split1 = cris_geo_file.split('.')
         print ('split1: ', split1)
         # split1:  ['SNDR', 'SNPP', 'CRIS', '20150603T1836', 'm06', 'g187', 'L1B_NSR', 'std', 'v02_05', 'G', '180905023033', 'nc']
-        output_filename = 'IND_CrIS_VIIRSMOD_' + split1[0] + '.' + split1[1] + '.' + split1[3] + '.' + split1[5]
+        output_filename = os.path.join(product_root_dir, 'IND_CrIS_VIIRSMOD_' + split1[0] + '.' + split1[1] + '.' + split1[3] + '.' + split1[5])
         print ('output_filename: ', output_filename)
 
         if os.path.exists(output_filename):
@@ -237,7 +237,7 @@ if __name__ == "__main__":
         viirs_geo_files = sorted(glob.glob(dataDir4+'VNP03MOD*A*'+'*'))
         print ('viirs_geo_files: ', viirs_geo_files)
 
-        start_date, start_date2, end_date, end_date2, output_filename = call_match_cris_viirs(cris_geo_files, viirs_geo_files)
+        start_date, start_date2, end_date, end_date2, output_filename = call_match_cris_viirs(cris_geo_files, viirs_geo_files, './')
 
   # datetime object containing current date and time
   now = datetime.now()
