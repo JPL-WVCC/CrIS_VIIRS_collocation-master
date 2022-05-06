@@ -154,11 +154,11 @@ def call_match_cris_viirs(cris_geo_files, viirs_geo_files, product_root_dir):
         f.createDimension('sounder_xtrack', dy.shape[1])
         f.createDimension('sounder_fov', dy.shape[2])
 
-        y_flatten = f.createVariable('number_of_pixels', 'i4', ('GranuleCount_ImagerPixel',))
+        y_flatten = f.createVariable('number_of_pixels', 'i4', ('GranuleCount_ImagerPixel',), zlib=True)
         y_flatten.setncatts({'long_name':u'imager cross-track index', 'units':u'none', 'var_desc':u'imager cross-track index'})
-        y_size=f.createVariable('FOVCount_ImagerPixel','i4',('sounder_atrack', 'sounder_xtrack', 'sounder_fov',))
+        y_size=f.createVariable('FOVCount_ImagerPixel','i4',('sounder_atrack', 'sounder_xtrack', 'sounder_fov',), zlib=True)
         y_size.setncatts({'long_name':u'count of imager pixels per sounder FOV', 'units':u'none', 'var_desc':u'count of imager pixels per sounder FOV'})
-        x_flatten = f.createVariable('number_of_lines', 'i4', ('GranuleCount_ImagerPixel',))
+        x_flatten = f.createVariable('number_of_lines', 'i4', ('GranuleCount_ImagerPixel',), zlib=True)
         x_flatten.setncatts({'long_name':u'imager along-track index after concatenating imager granules along track', 'units':u'none', 'var_desc':u'imager along-track index after concatenating imager granules along track'})
 
         print ('dx_flatten.shape: ', dx_flatten.shape)
