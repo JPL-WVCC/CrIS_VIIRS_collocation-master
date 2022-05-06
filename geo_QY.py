@@ -102,11 +102,13 @@ def match_cris_viirs_QY(crisLos, crisPos, viirsPos, cristime,viirstime):
       Remote Sensing, 8, 76; doi:10.3390/rs8010076.     
     """
     
+    """
     print('crisLos.shape: ', crisLos.shape)
     print('crisPos.shape: ', crisPos.shape)
     print('viirsPos.shape: ', viirsPos.shape)
     print('cristime.shape: ', cristime.shape)
     print('viirstime.shape: ', viirstime.shape)
+    """
 
     # Derive Satellite Postion 
     crisSat = crisPos - crisLos 
@@ -115,7 +117,7 @@ def match_cris_viirs_QY(crisLos, crisPos, viirsPos, cristime,viirstime):
     
     # build kdtree to find match index 
     pytree_los = KDTree(viirsPos.reshape(viirsPos.size//3, 3))
-    print('type(pytree_los): ', type(pytree_los))
+    ### print('type(pytree_los): ', type(pytree_los))
 
     dist_los, idx_los = pytree_los.query(crisPos.reshape(crisPos.size//3, 3) , sqr_dists=False)
     
@@ -125,10 +127,10 @@ def match_cris_viirs_QY(crisLos, crisPos, viirsPos, cristime,viirstime):
     idy, idx  = find_match_index_QY(crisLos.reshape(crisLos.size//3, 3),\
                                      crisSat.reshape(crisSat.size//3, 3),\
                                      viirsPos, cristimebig.reshape(1,crisLos.size//3),viirstime, mx, my)
-    print('len(idy) before: ', len(idy))
+    ### print('len(idy) before: ', len(idy))
         
     idy = np.array(idy).reshape(crisLos.shape[0:crisLos.ndim-1])
-    print('idy.shape after: ', idy.shape)
+    ### print('idy.shape after: ', idy.shape)
     idx = np.array(idx).reshape(crisLos.shape[0:crisLos.ndim-1])
     
     return idy, idx
