@@ -31,12 +31,10 @@ def call_match_cris_viirs(cris_geo_files, viirs_geo_files, product_root_dir):
         ### print ('type(viirs_lon): ', type(viirs_lon))
         print ('viirs_lon.shape: ', viirs_lon.shape)
 
+        """
         start_time = viirs_time.min()
         end_time = viirs_time.max()
-
-
-#viirs_bt, viirs_rad, viirs_sdrQa = geo.read_viirs_sdr(viirs_sdr_files)i
-
+        """
 
 # read CrIS data 
         cris_lon, cris_lat, cris_satAzimuth, cris_satRange, cris_satZenith, cris_time, cris_realLW = geo_QY.read_nasa_cris_geo(cris_geo_files)
@@ -44,6 +42,7 @@ def call_match_cris_viirs(cris_geo_files, viirs_geo_files, product_root_dir):
         print ('cris_time.min(): ', cris_time.min())
         print ('cris_time.max(): ', cris_time.max())
 
+        """
         if start_time < cris_time.min():
           start_time = cris_time.min()
 
@@ -74,6 +73,23 @@ def call_match_cris_viirs(cris_geo_files, viirs_geo_files, product_root_dir):
 
         print ('start_date2: ', start_date2)
         print ('end_date2: ', end_date2)
+        """
+
+# read CrIS data global attributes
+        fcris = nc4.Dataset(cris_geo_files[0], 'r', format='NETCDF4')
+        start_date = fcris.time_coverage_start
+        end_date = fcris.time_coverage_end
+
+        start_date2 = start_date
+        end_date2 = end_date
+
+        # from target granule's global attributes
+        lat_min = fcris.geospatial_lat_min
+        lat_max = fcris.geospatial_lat_max
+        lon_min = fcris.geospatial_lon_min
+        lon_max = fcris.geospatial_lon_max
+
+        fcris.close()
 
         # changed per Qing's suggestion
         ### output_filename = 'IND_CrIS_VIIRSMOD_' + start_date2 + '_' + end_date2
@@ -169,30 +185,60 @@ def call_match_cris_viirs(cris_geo_files, viirs_geo_files, product_root_dir):
 
         # add global attributes
 
-        viirs_str = ''
-        for item1 in viirs_geo_files:
-          viirs_str += ',' + os.path.basename(item1)
+        f.VERSION = '1'
+        f.SHORT_NAME = "SNPP_CrIS_VIIRS750m_IND"
+        f.TITLE = "SNPP CrIS-VIIRS 750-m Matchup Indexes V1"
+        f.IDENTIFIER_PRODUCT_DOI_AUTHORITY = "http://dx.doi.org/"
+        f.IDENTIFIER_PRODUCT_DOI = "10.5067/MEASURES/WVCC/DATA211"
+      
+        ct = datetime.now()
+        f.PRODUCTIONDATE = ct.isoformat()
 
-        viirs_str = viirs_str[1:]
-        f.viirs_file_names = viirs_str
+        f.description = "Version-1 SNPP VIIRS-CrIS collocation index product by the project of Multidecadal Satellite Record of Water Vapor, Temperature, and Clouds (PI: Eric Fetzer) funded by NASA’s Making Earth System Data Records for Use in Research Environments (MEaSUREs) Program following Wang et al. (2016, https://doi.org/10.3390/rs8010076) and Yue et al. (2022, https://doi.org/10.5194/amt-15-2099-2022)."
 
-        ### f.cris_file_name = os.path.basename(cris_geo_file)
-        cris_str = ''
-        for item1 in cris_geo_files:
-          cris_str += ',' + os.path.basename(item1)
+        f.TIME_TOLERANCE = "900 seconds"
+        f.DISTANCE_TOLERANCE = "CrIS FOV size angle 0.963 deg divided by 2"
 
-        cris_str = cris_str[1:]
-        f.cris_file_name = cris_str
+        # get source granule info
+        nf = 0
+        try:
+          f.VIIRS_FILE1 = os.path.basename(viirs_geo_files[0])
+          nf += 1
+        except IndexError:
+          pass
 
-        f.cris_start_time = start_date
-        f.cris_end_time = end_date
+        try:
+          f.VIIRS_FILE2 = os.path.basename(viirs_geo_files[1])
+          nf += 1
+        except IndexError:
+          pass
 
-        f.cris_min_lat = cris_lat.min()
-        f.cris_min_lon = cris_lon.min()
-        f.cris_max_lat = cris_lat.max()
-        f.cris_max_lon = cris_lon.max()
+        try:
+          f.VIIRS_FILE3 = os.path.basename(viirs_geo_files[2])
+          nf += 1
+        except IndexError:
+          pass
 
-        f.description="Version-1 SNPP VIIRS-CrIS collocation index product by the project of Multidecadal Satellite Record of Water Vapor, Temperature, and Clouds (PI: Eric Fetzer) funded by NASA’s Making Earth System Data Records for Use in Research Environments (MEaSUREs) Program."
+        nf = np.int32(nf)
+        f.VIIRS_FILES_COUNT = nf
+
+        cris_str = os.path.basename(cris_geo_files[0])
+        f.CRIS_FILE = cris_str
+
+        f.RANGEBEGINNINGDATE = start_date.split('T')[0]
+        f.RANGEBEGINNINGTIME = start_date.split('T')[1].replace('Z', '')
+        f.RANGEENDINGDATE = end_date.split('T')[0]
+        f.RANGEENDINGTIME = end_date.split('T')[1].replace('Z', '')
+
+        # from target granule's global attributes
+        ### f.cris_min_lat = lat_min
+        f.SOUTHBOUNDINGCOORDINATE = lat_min
+        ### f.cris_min_lon = lon_min
+        f.WESTBOUNDINGCOORDINATE = lon_min
+        ### f.cris_max_lat = lat_max
+        f.NORTHBOUNDINGCOORDINATE = lat_max
+        ### f.cris_max_lon = lon_max
+        f.EASTBOUNDINGCOORDINATE = lon_max
 
         f.close()
 
