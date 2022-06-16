@@ -8,33 +8,18 @@ import pickle
 import shutil
 import netCDF4 as nc4
 from datetime import datetime
-
 import json
+import logging
 
-
+module_logger = logging.getLogger("parallel_run_matchup.code_test_QY")
 
 
 def call_match_cris_viirs(cris_geo_files, viirs_geo_files, product_root_dir):
+        if len(cris_geo_files) == 0:
+          module_logger.info('Warning: cris_geo_files is empty')
+          return None, None, None, None, None
 
         start_t = time.time()
-
-# read VIIRS data 
-        viirs_lon, viirs_lat, viirs_satAzimuth, viirs_satRange, viirs_satZenith, viirs_height, viirs_time = geo_QY.read_nasa_viirs_geo(viirs_geo_files)
-        ### print ('viirs_time: ', viirs_time)
-        ### print ('type(viirs_time): ', type(viirs_time))
-        ### print ('viirs_time: ', viirs_time)
-        print ('viirs_time.shape: ', viirs_time.shape)
-        ### print ('viirs_time.min(): ', viirs_time.min())
-        ### print ('viirs_time.max(): ', viirs_time.max())
-
-        ### print ('viirs_lon: ', viirs_lon)
-        ### print ('type(viirs_lon): ', type(viirs_lon))
-        print ('viirs_lon.shape: ', viirs_lon.shape)
-
-        """
-        start_time = viirs_time.min()
-        end_time = viirs_time.max()
-        """
 
 # read CrIS data 
         cris_lon, cris_lat, cris_satAzimuth, cris_satRange, cris_satZenith, cris_time, cris_realLW = geo_QY.read_nasa_cris_geo(cris_geo_files)
@@ -110,6 +95,29 @@ def call_match_cris_viirs(cris_geo_files, viirs_geo_files, product_root_dir):
 
         ### sys.exit(0)
         os.mkdir(output_filename)
+
+        # error out if no matching VIIRS granules are found
+        if len(viirs_geo_files) == 0:
+          module_logger.info('Warning: there is no VIIRS granules for {0}!'.format(cris_geo_files[0]))
+          return None, None, None, None, None
+
+# read VIIRS data 
+        viirs_lon, viirs_lat, viirs_satAzimuth, viirs_satRange, viirs_satZenith, viirs_height, viirs_time = geo_QY.read_nasa_viirs_geo(viirs_geo_files)
+        ### print ('viirs_time: ', viirs_time)
+        ### print ('type(viirs_time): ', type(viirs_time))
+        ### print ('viirs_time: ', viirs_time)
+        print ('viirs_time.shape: ', viirs_time.shape)
+        ### print ('viirs_time.min(): ', viirs_time.min())
+        ### print ('viirs_time.max(): ', viirs_time.max())
+
+        ### print ('viirs_lon: ', viirs_lon)
+        ### print ('type(viirs_lon): ', type(viirs_lon))
+        print ('viirs_lon.shape: ', viirs_lon.shape)
+
+        """
+        start_time = viirs_time.min()
+        end_time = viirs_time.max()
+        """
 
 #cris_realLW = geo.read_nasa_cris_sdr(cris_sdr_files , sdrFlag=True)
 
@@ -221,6 +229,9 @@ def call_match_cris_viirs(cris_geo_files, viirs_geo_files, product_root_dir):
 
         nf = np.int32(nf)
         f.VIIRS_FILES_COUNT = nf
+
+        if nf < 3:
+          module_logger.info('Warning: there are {0} input VIIRS granules for {1}, not 3 as usual!'.format(nf, output_filename))
 
         cris_str = os.path.basename(cris_geo_files[0])
         f.CRIS_FILE = cris_str
