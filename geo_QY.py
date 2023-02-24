@@ -127,7 +127,13 @@ def match_cris_viirs_QY(crisLos, crisPos, viirsPos, cristime,viirstime):
     idy, idx  = find_match_index_QY(crisLos.reshape(crisLos.size//3, 3),\
                                      crisSat.reshape(crisSat.size//3, 3),\
                                      viirsPos, cristimebig.reshape(1,crisLos.size//3),viirstime, mx, my)
-    ### print('len(idy) before: ', len(idy))
+
+    nidy = np.array(idy)
+    ### print('nidy.size before: ', nidy.size)
+
+    if nidy.size == 0:
+      print('Warning: no co-location is found.')
+      return None, None
         
     idy = np.array(idy).reshape(crisLos.shape[0:crisLos.ndim-1])
     ### print('idy.shape after: ', idy.shape)
