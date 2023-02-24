@@ -153,6 +153,10 @@ def call_match_cris_viirs(cris_geo_files, viirs_geo_files, product_root_dir):
 #remove the sdrqa, but adding time requirement (less than 600S difference)
         dy, dx = geo_QY.match_cris_viirs_QY(cris_los, cris_pos, viirs_pos, cris_time, viirs_time)
 
+        if dy is None and dx is None:
+          module_logger.info('Warning: no co-location is found.')
+          sys.exit(0)
+
         ### print ('dy: ', dy)
         print ('dy.shape: ', dy.shape)
         ### print ('dx: ', dx)
@@ -240,6 +244,12 @@ def call_match_cris_viirs(cris_geo_files, viirs_geo_files, product_root_dir):
         f.RANGEBEGINNINGTIME = start_date.split('T')[1].replace('Z', '')
         f.RANGEENDINGDATE = end_date.split('T')[0]
         f.RANGEENDINGTIME = end_date.split('T')[1].replace('Z', '')
+
+        # from target granule's global attributes
+        ### lat_min = fcris.geospatial_lat_min
+        ### lat_max = fcris.geospatial_lat_max
+        ### lon_min = fcris.geospatial_lon_min
+        ### lon_max = fcris.geospatial_lon_max
 
         # from target granule's global attributes
         ### f.cris_min_lat = lat_min
