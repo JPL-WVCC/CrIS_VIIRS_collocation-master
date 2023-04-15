@@ -14,7 +14,7 @@ import logging
 module_logger = logging.getLogger("parallel_run_matchup.code_test_QY")
 
 
-def call_match_cris_viirs(cris_geo_files, viirs_geo_files, product_root_dir):
+def call_match_cris_viirs(cris_geo_files, viirs_geo_files, product_root_dir, spacecraft):
         if len(cris_geo_files) == 0:
           module_logger.info('Warning: cris_geo_files is empty')
           return None, None, None, None, None
@@ -82,6 +82,7 @@ def call_match_cris_viirs(cris_geo_files, viirs_geo_files, product_root_dir):
         # Qing's suggestion:
         # use this name: IND_CrIS_VIIRSMOD_SNDR.SNPP.20150601T1548.g159.nc
         # for this CRIS granule: SNDR.SNPP.CRIS.20150601T1548.m06.g159.L1B_NSR.std.v02_05.G.180904193415.nc
+        # or SNPP above could be J1
         cris_geo_file = os.path.basename(cris_geo_files[0])
         print ('cris_geo_file: ', cris_geo_file)
         split1 = cris_geo_file.split('.')
@@ -198,15 +199,22 @@ def call_match_cris_viirs(cris_geo_files, viirs_geo_files, product_root_dir):
         # add global attributes
 
         f.VERSION = '1'
-        f.SHORT_NAME = "SNPP_CrIS_VIIRS750m_IND"
-        f.TITLE = "SNPP CrIS-VIIRS 750-m Matchup Indexes V1"
+
+        if spacecraft == 'J1' or spacecraft == 'j1':
+          f.SHORT_NAME = "J1_CrIS_VIIRS750m_IND"
+          f.TITLE = "JPSS-1 CrIS-VIIRS 750-m Matchup Indexes V1"
+          f.description = "Version-1 JPSS-1 VIIRS-CrIS collocation index product by the project of Multidecadal Satellite Record of Water Vapor, Temperature, and Clouds (PI: Eric Fetzer) funded by NASA’s Making Earth System Data Records for Use in Research Environments (MEaSUREs) Program following Wang et al. (2016, https://doi.org/10.3390/rs8010076) and Yue et al. (2022, https://doi.org/10.5194/amt-15-2099-2022)."
+          f.IDENTIFIER_PRODUCT_DOI = "10.5067/MEASURES/WVCC/DATA212"
+        else:
+          f.SHORT_NAME = "SNPP_CrIS_VIIRS750m_IND"
+          f.TITLE = "SNPP CrIS-VIIRS 750-m Matchup Indexes V1"
+          f.description = "Version-1 SNPP VIIRS-CrIS collocation index product by the project of Multidecadal Satellite Record of Water Vapor, Temperature, and Clouds (PI: Eric Fetzer) funded by NASA’s Making Earth System Data Records for Use in Research Environments (MEaSUREs) Program following Wang et al. (2016, https://doi.org/10.3390/rs8010076) and Yue et al. (2022, https://doi.org/10.5194/amt-15-2099-2022)."
+          f.IDENTIFIER_PRODUCT_DOI = "10.5067/MEASURES/WVCC/DATA211"
+
         f.IDENTIFIER_PRODUCT_DOI_AUTHORITY = "http://dx.doi.org/"
-        f.IDENTIFIER_PRODUCT_DOI = "10.5067/MEASURES/WVCC/DATA211"
       
         ct = datetime.now()
         f.PRODUCTIONDATE = ct.isoformat()
-
-        f.description = "Version-1 SNPP VIIRS-CrIS collocation index product by the project of Multidecadal Satellite Record of Water Vapor, Temperature, and Clouds (PI: Eric Fetzer) funded by NASA’s Making Earth System Data Records for Use in Research Environments (MEaSUREs) Program following Wang et al. (2016, https://doi.org/10.3390/rs8010076) and Yue et al. (2022, https://doi.org/10.5194/amt-15-2099-2022)."
 
         f.TIME_TOLERANCE = "900 seconds"
         f.DISTANCE_TOLERANCE = "CrIS FOV size angle 0.963 deg divided by 2"
