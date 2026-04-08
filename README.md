@@ -87,10 +87,13 @@ runner passes in.
 
 ### VIIRS geolocation
 
-| Satellite | Product    | LAADS Collection | Typical location                   |
-|-----------|------------|------------------|------------------------------------|
-| SNPP      | VNP03MOD   | 5110             | `/raid15/leipan/VIIRS/VNP03MOD/{YYYY}/{DOY}/` |
-| JPSS-1    | VJ103MOD   | 5201             | `{user_home}/measures/VIIRS/VJ103MOD/{YYYY}/{DOY}/` |
+| Satellite | Product    | LAADS Collection |
+|-----------|------------|------------------|
+| SNPP      | VNP03MOD   | 5110             |
+| JPSS-1    | VJ103MOD   | 5201             |
+
+Files are expected at `{viirs_root}/{YYYY}/{DOY}/VNP03MOD.*.nc` (or
+`VJ103MOD.*.nc` for JPSS-1), where `{viirs_root}` is a user-provided directory.
 
 VIIRS data is not pre-staged on AIRS/SIPS. Use
 [`matchup_pge/scripts/download_viirs.py`](https://github.com/JPL-WVCC/matchup_pge/blob/master/scripts/download_viirs.py)
@@ -103,12 +106,6 @@ to fetch from LAADS DAAC.
 
 ```bash
 pip install -r requirements.txt
-```
-
-Or use the pre-built environment on AIRS/SIPS:
-
-```bash
-export PATH=/home/leipan/anaconda3/bin:$PATH
 ```
 
 ## Usage
